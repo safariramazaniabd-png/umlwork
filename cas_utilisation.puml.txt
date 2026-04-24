@@ -1,0 +1,49 @@
+@startuml HumanitAID_CasUtilisation
+
+skinparam actorStyle awesome
+skinparam backgroundColor #FAFAFA
+skinparam usecase {
+  BackgroundColor #E8F4FD
+  BorderColor #2980B9
+}
+
+title Diagramme de Cas d'Utilisation — HumanitAID
+
+actor "Donateur Anonyme"    as DA
+actor "Donateur Enregistré" as DE
+actor "Administrateur"      as ADM
+actor "Passerelle Paiement" as PP
+
+rectangle "Système HumanitAID" {
+  usecase "Consulter les campagnes"         as UC1
+  usecase "Faire un don ponctuel"           as UC2
+  usecase "Faire un don récurrent"          as UC3
+  usecase "Choisir le montant"              as UC4
+  usecase "Choisir méthode de paiement"     as UC5
+  usecase "Recevoir un reçu par email"      as UC6
+  usecase "Créer un compte"                 as UC7
+  usecase "Consulter historique des dons"   as UC8
+  usecase "Gérer les campagnes"             as UC9
+  usecase "Consulter rapports financiers"   as UC10
+  usecase "Traiter le paiement"             as UC11
+  usecase "Confirmer la transaction"        as UC12
+}
+
+DA  --> UC1
+DA  --> UC2
+DA  --> UC7
+DE  --> UC1
+DE  --> UC2
+DE  --> UC3
+DE  --> UC8
+ADM --> UC9
+ADM --> UC10
+PP  --> UC11
+PP  --> UC12
+
+UC2 .> UC4  : <<include>>
+UC2 .> UC5  : <<include>>
+UC6 .> UC2  : <<extend>>
+UC3 --|> UC2 : <<generalize>>
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml HumanitAID_Classes
+
+skinparam classBackgroundColor #EBF5FB
+skinparam classBorderColor #2471A3
+skinparam classHeaderBackgroundColor #2471A3
+skinparam classHeaderFontColor #FFFFFF
+skinparam backgroundColor #FAFAFA
+
+title Diagramme de Classes — HumanitAID
+
+class Donateur {
+  - id : Integer
+  - nom : String
+  - prenom : String
+  - email : String
+  - telephone : String
+  - pays : String
+  - dateInscription : Date
+  - typeCompte : String
+  --
+  + inscrire() : Boolean
+  + seConnecter() : Boolean
+  + consulterHistorique() : List
+}
+
+class Don {
+  - id : Integer
+  - montant : Float
+  - devise : String
+  - date : DateTime
+  - frequence : String
+  - statut : String
+  - message : String
+  --
+  + creer() : Don
+  + annuler() : Boolean
+  + genererRecu() : Recu
+}
+
+class Campagne {
+  - id : Integer
+  - titre : String
+  - description : String
+  - objectif : Float
+  - montantCollecte : Float
+  - dateDebut : Date
+  - dateFin : Date
+  - statut : String
+  --
+  + calculerProgression() : Float
+  + ajouterDon(don : Don) : void
+  + cloturer() : Boolean
+}
+
+class Paiement {
+  - id : Integer
+  - reference : String
+  - methode : String
+  - montant : Float
+  - statut : String
+  - dateTransaction : DateTime
+  - codePays : String
+  --
+  + initier() : Boolean
+  + valider() : Boolean
+  + rembourser() : Boolean
+}
+
+class Recu {
+  - id : Integer
+  - numero : String
+  - dateEmission : DateTime
+  - montant : Float
+  - nomDonateur : String
+  - campagneConcernee : String
+  --
+  + generer() : PDF
+  + envoyerParEmail() : Boolean
+}
+
+class PasserellePaiement {
+  - url : String
+  - cleAPI : String
+  --
+  + traiterPaiement() : Boolean
+  + confirmerTransaction() : String
+}
+
+Donateur      "1" -- "0..*" Don         : effectue
+Don           "0..*" -- "1" Campagne    : alimente
+Don           "1" -- "1"   Paiement    : declenche
+Don           "1" -- "0..1" Recu       : genere
+Paiement      ..>          PasserellePaiement : utilise
+
+@enduml

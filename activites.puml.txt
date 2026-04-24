@@ -1,0 +1,51 @@
+@startuml HumanitAID_Activites
+
+skinparam backgroundColor #FAFAFA
+skinparam activityBackgroundColor #EBF5FB
+skinparam activityBorderColor #2471A3
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #D4AC0D
+
+title Diagramme d'Activités — Traitement complet d'un don
+
+|Donateur|
+start
+:Consulter les campagnes disponibles;
+:Sélectionner une campagne;
+:Saisir le montant et les informations;
+:Choisir la méthode de paiement;
+:Soumettre le formulaire;
+
+|Système HumanitAID|
+if (Données valides ?) then (OUI)
+  :Envoyer vers la passerelle;
+
+  |Passerelle de Paiement|
+  if (Paiement accepté ?) then (OUI)
+
+    |Système HumanitAID|
+    :Enregistrer le don;
+    :Mettre à jour la campagne;
+    :Générer le reçu PDF;
+
+    |Service Email|
+    :Envoyer le reçu au donateur;
+    :Notifier l'administrateur;
+
+    |Système HumanitAID|
+    stop
+
+  else (NON)
+    |Système HumanitAID|
+    :Notifier l'échec au donateur;
+    stop
+  endif
+
+else (NON)
+  |Donateur|
+  :Corriger les erreurs;
+  :Soumettre le formulaire;
+  detach
+endif
+
+@enduml

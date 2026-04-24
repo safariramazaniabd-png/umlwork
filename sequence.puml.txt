@@ -1,0 +1,44 @@
+@startuml HumanitAID_Sequence
+
+skinparam backgroundColor #FAFAFA
+skinparam sequenceArrowThickness 2
+skinparam sequenceParticipantBackgroundColor #EBF5FB
+skinparam sequenceParticipantBorderColor #2471A3
+skinparam sequenceLifeLineBorderColor #2471A3
+
+title Diagramme de Séquence — Flux d'un don en ligne
+
+actor       "Donateur"           as D
+participant "Interface Web"      as IW
+participant "Serveur HumanitAID" as SH
+participant "Base de Données"    as BD
+participant "Passerelle Paiement" as PP
+participant "Service Email"      as SE
+
+D  -> IW : choisirCampagne()
+IW -> SH : chargerCampagne(id)
+SH -> BD : getCampagne(id)
+BD --> SH : retournerCampagne()
+SH --> IW : afficherCampagne()
+
+D  -> IW : saisirMontant(montant, methode)
+IW -> SH : soumettreFormulaire(don)
+SH -> BD : enregistrerDon(don)
+
+alt Paiement accepté
+
+  SH -> PP  : traiterPaiement(montant, methode)
+  PP --> SH : confirmationPaiement(reference)
+  SH -> BD  : mettreAJourStatut(confirme)
+  SH -> SE  : envoyerRecu(donateur, recu)
+  SE --> D  : emailConfirmation()
+
+else Paiement refusé
+
+  PP --> SH : erreurPaiement(code)
+  SH --> IW : afficherErreur(message)
+  IW --> D  : notifierEchec()
+
+end
+
+@enduml
