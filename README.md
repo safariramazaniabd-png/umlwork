@@ -49,7 +49,49 @@ HumanitAID est une application de gestion de dons destinée aux organisations hu
 - Gérer les campagnes
 - Consulter les rapports financiers
 
-## 📊 Diagrammes
+## ⚙️ Stack technique
+
+| Couche | Technologie |
+|--------|-------------|
+| **API** | Python 3.12+ / FastAPI |
+| **ORM** | SQLAlchemy 2.0 (asyncio) |
+| **BD** | PostgreSQL 16 |
+| **Migrations** | Alembic |
+| **Paiement** | Stripe |
+| **Email** | SMTP |
+| **Tests** | pytest + httpx |
+| **Conteneurisation** | Docker / docker-compose |
+
+## 🚀 Démarrage rapide
+
+```bash
+cp .env.example .env
+docker compose up -d
+docker compose exec api alembic upgrade head
+```
+
+Sans Docker :
+
+```bash
+pip install -e ".[dev]"
+cp .env.example .env
+alembic upgrade head
+uvicorn app.main:app --reload
+```
+
+L'API est accessible sur `http://localhost:8000`. Documentation interactive sur `http://localhost:8000/docs`.
+
+## 📡 API
+
+| Module | Routes |
+|--------|--------|
+| **Donateurs** | CRUD — `POST/GET/PATCH/DELETE /api/v1/donateurs/` |
+| **Campagnes** | CRUD — `POST/GET/PATCH/DELETE /api/v1/campagnes/` |
+| **Dons** | CRUD — `POST/GET/DELETE /api/v1/dons/` |
+| **Paiements** | CRUD — `POST/GET /api/v1/paiements/` |
+| **Reçus** | CRUD — `POST/GET /api/v1/recus/` |
+
+## 📊 Diagrammes UML
 
 Le projet contient les diagrammes UML suivants :
 
@@ -68,13 +110,14 @@ Le projet contient les diagrammes UML suivants :
 4. **Validation** — La passerelle valide la transaction
 5. **Confirmation** — Reçu PDF envoyé par email + notification administrateur
 
-## 🛠 Technologies
+## 🧪 Tests
 
-- **Backend** : API REST
-- **Base de données** : PostgreSQL
-- **Passerelle paiement** : Stripe / PayPal
-- **Email** : Service SMTP
+```bash
+pip install -e ".[dev]"
+pip install aiosqlite
+pytest --cov=app/
+```
 
 ## 📄 Licence
 
-Ce projet est un modèle UML — implémentez selon vos besoins.
+MIT License — voir [LICENSE](LICENSE).
